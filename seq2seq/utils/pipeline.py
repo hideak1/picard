@@ -110,7 +110,7 @@ class Text2SQLGenerationPipeline(Text2TextGenerationPipeline):
             raise ValueError(
                 f" `inputs`: {inputs} have the wrong format. The should be either of type `Text2SQLInput` or type `List[Text2SQLInput]`"
             )
-        encodings = self.tokenizer(inputs, padding=padding, truncation=truncation, return_tensors=self.framework)
+        encodings = self.tokenizer(inputs, padding=padding, truncation=truncation, return_tensors=self.framework, max_length = 10240)
         # This is produced by tokenizers but is an invalid generate kwargs
         if "token_type_ids" in encodings:
             del encodings["token_type_ids"]

@@ -172,6 +172,8 @@ serve: pull-eval-image
 	mkdir -p -m 777 transformers_cache
 	docker run \
 		-it \
+		--gpus=all -e NVIDIA_DRIVER_CAPABILITIES=compute,utility -e NVIDIA_VISIBLE_DEVICES=all \
+		--privileged \
 		--rm \
 		--user 13011:13011 \
 		-p 8000:8000 \
@@ -179,7 +181,8 @@ serve: pull-eval-image
 		--mount type=bind,source=$(BASE_DIR)/transformers_cache,target=/transformers_cache \
 		--mount type=bind,source=$(BASE_DIR)/configs,target=/app/configs \
 		tscholak/$(EVAL_IMAGE_NAME):$(GIT_HEAD_REF) \
-		/bin/bash -c "python seq2seq/serve_seq2seq.py configs/serve.json"
+		#/bin/bash -c "python seq2seq/serve_seq2seq.py configs/serve.json"
+	        /bin/bash
 
 .PHONY: prediction_output
 prediction_output: pull-eval-image
