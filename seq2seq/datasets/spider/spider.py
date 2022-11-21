@@ -81,8 +81,13 @@ class Spider(datasets.GeneratorBasedBuilder):
                     {
                         "column_id": datasets.Value("int32"),
                         "other_column_id": datasets.Value("int32"),
+                        # "left_table_name": datasets.Value("string"),
+                        # "left_column_name": datasets.Value("string"),
+                        # "right_table_name": datasets.Value("string"),
+                        # "right_column_name": datasets.Value("string"),
                     }
                 ),
+                "table_units": datasets.features.Sequence(datasets.Value("int32")),
             }
         )
         return datasets.DatasetInfo(
@@ -149,5 +154,8 @@ class Spider(datasets.GeneratorBasedBuilder):
                         "db_foreign_keys": [
                             {"column_id": column_id, "other_column_id": other_column_id}
                             for column_id, other_column_id in schema["foreign_keys"]
+                            # {"left_table_name": keys[0][0], "left_column_name": keys[0][1], "right_table_name": keys[1][0], "right_column_name": keys[1][1]}
+                            # for keys in schema["foreign_keys"]
                         ],
+                        "table_units":[ unit[1] if isinstance(unit[1], int) else 99999 for unit in sample["sql"]["from"]["table_units"]],
                     }

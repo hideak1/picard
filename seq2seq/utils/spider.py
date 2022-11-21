@@ -32,6 +32,7 @@ def spider_add_serialized_schema(ex: dict, data_training_args: DataTrainingArgum
         db_id=ex["db_id"],
         db_column_names=ex["db_column_names"],
         db_table_names=ex["db_table_names"],
+        db_foreign_keys=ex["db_foreign_keys"],
         schema_serialization_type=data_training_args.schema_serialization_type,
         schema_serialization_randomized=data_training_args.schema_serialization_randomized,
         schema_serialization_with_db_id=data_training_args.schema_serialization_with_db_id,

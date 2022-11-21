@@ -129,6 +129,7 @@ class Text2SQLGenerationPipeline(Text2TextGenerationPipeline):
             db_id=input.db_id,
             db_column_names=schema["db_column_names"],
             db_table_names=schema["db_table_names"],
+            db_foreign_keys=schema["db_foreign_keys"],
             schema_serialization_type=self.schema_serialization_type,
             schema_serialization_randomized=self.schema_serialization_randomized,
             schema_serialization_with_db_id=self.schema_serialization_with_db_id,

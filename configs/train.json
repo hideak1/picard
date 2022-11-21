@@ -1,6 +1,6 @@
 {
-    "run_name": "t5-spider",
-    "model_name_or_path": "t5-3b",
+    "run_name": "t5-spider-1",
+    "model_name_or_path": "tscholak/1zha5ono",
     "dataset": "spider",
     "source_prefix": "",
     "schema_serialization_type": "peteshaw",
@@ -9,12 +9,12 @@
     "schema_serialization_with_db_content": true,
     "normalize_query": true,
     "target_with_db_id": true,
-    "output_dir": "/train",
-    "cache_dir": "/transformers_cache",
+    "output_dir": "./train",
+    "cache_dir": "./transformers_cache",
     "do_train": true,
     "do_eval": true,
     "fp16": false,
-    "num_train_epochs": 3072,
+    "num_train_epochs": 100,
     "per_device_train_batch_size": 5,
     "per_device_eval_batch_size": 5,
     "gradient_accumulation_steps": 410,
@@ -26,7 +26,7 @@
     "warmup_ratio": 0.0,
     "warmup_steps": 0,
     "seed": 1,
-    "report_to": ["wandb"],
+    "report_to": [],
     "logging_strategy": "steps",
     "logging_first_step": true,
     "logging_steps": 4,
@@ -40,5 +40,6 @@
     "predict_with_generate": true,
     "num_beams": 1,
     "num_beam_groups": 1,
-    "use_picard": false
+    "use_picard": false,
+    "overwrite_output_dir": true
 }

@@ -96,6 +96,10 @@ class Spider(datasets.Metric):
                             {
                                 "column_id": datasets.Value("int32"),
                                 "other_column_id": datasets.Value("int32"),
+                            #    "left_table_name": datasets.Value("string"),
+                            #    "left_column_name": datasets.Value("string"),
+                            #    "right_table_name": datasets.Value("string"),
+                            #    "right_column_name": datasets.Value("string"),
                             }
                         ),
                     },

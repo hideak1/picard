@@ -209,6 +209,8 @@ def _get_schemas(examples: Dataset) -> Dict[str, dict]:
             }
     return schemas
 
+def _dataset_filter(batch: dict):
+    return len(batch["table_units"]) > 1
 
 def _prepare_train_split(
     dataset: Dataset,
@@ -217,12 +219,16 @@ def _prepare_train_split(
     pre_process_function: Callable[[dict, Optional[int], Optional[int]], dict],
 ) -> TrainSplit:
     schemas = _get_schemas(examples=dataset)
+
+    dataset = dataset.filter(_dataset_filter)
+
     dataset = dataset.map(
         add_serialized_schema,
         batched=False,
         num_proc=data_training_args.preprocessing_num_workers,
         load_from_cache_file=not data_training_args.overwrite_cache,
     )
+
     if data_training_args.max_train_samples is not None:
         dataset = dataset.select(range(data_training_args.max_train_samples))
     column_names = dataset.column_names
@@ -349,6 +355,7 @@ def serialize_schema(
     db_id: str,
     db_column_names: Dict[str, str],
     db_table_names: List[str],
+    db_foreign_keys: Dict[str, List[int]],
     schema_serialization_type: str = "peteshaw",
     schema_serialization_randomized: bool = False,
     schema_serialization_with_db_id: bool = True,
@@ -360,8 +367,10 @@ def serialize_schema(
         table_sep = ". "
         table_str = "Table: {table}. Columns: {columns}"
         column_sep = ", "
-        column_str_with_values = "{column} ({values})"
+        column_str_with_values = "{column} [{table}({key})] ({values})"
+        column_str_foreign_key_with_values = "{column} [{table}({key})] ({values})"
         column_str_without_values = "{column}"
+        column_str_foreign_key = "{column} [{table}({column})]"
         value_sep = ", "
     elif schema_serialization_type == "peteshaw":
         # see https://github.com/google-research/language/blob/master/language/nqg/tasks/spider/append_schema.py#L42
@@ -370,10 +379,32 @@ def serialize_schema(
         table_str = " | {table} : {columns}"
         column_sep = " , "
         column_str_with_values = "{column} ( {values} )"
+        column_str_foreign_key_with_values = "{column} [{table}({key})] ({values})"
         column_str_without_values = "{column}"
+        column_str_foreign_key = "{column} [{table}({key})]"
         value_sep = " , "
     else:
         raise NotImplementedError
+
+    id2table = dict()
+    for table_id, table_name in enumerate(db_table_names):
+        id2table[table_id] = table_name.lower() if normalize_query else table_name
+
+    id2column = dict()
+    for idx, (table_id, column_name) in enumerate(zip(
+                            db_column_names["table_id"],
+                            db_column_names["column_name"],
+                        )):
+        if table_id == -1:
+            continue
+        id2column[idx] = (id2table[table_id], column_name.lower() if normalize_query else column_name)
+
+    foreignkey_map = dict()
+    for i in range(len(db_foreign_keys['column_id'])):
+        foreignkey_map[id2column[db_foreign_keys['column_id'][i]]] = id2column[db_foreign_keys['other_column_id'][i]]
+        foreignkey_map[id2column[db_foreign_keys['other_column_id'][i]]] = id2column[db_foreign_keys['column_id'][i]]
+        # foreignkey_map[(foreign_key['right_table_name'], foreign_key['right_column_name'])] = (foreign_key['left_table_name'], foreign_key['left_column_name'])
+        # foreignkey_map[(foreign_key['left_table_name'], foreign_key['left_column_name'])] = (foreign_key['right_table_name'], foreign_key['right_column_name'])
 
     def get_column_str(table_name: str, column_name: str) -> str:
         column_name_str = column_name.lower() if normalize_query else column_name
@@ -385,10 +416,16 @@ def serialize_schema(
                 db_path=(db_path + "/" + db_id + "/" + db_id + ".sqlite"),
             )
             if matches:
+                if (table_name, column_name_str) in foreignkey_map:
+                    return column_str_foreign_key_with_values.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1], values=value_sep.join(matches))
                 return column_str_with_values.format(column=column_name_str, values=value_sep.join(matches))
             else:
+                if (table_name, column_name_str) in foreignkey_map:
+                    return column_str_foreign_key.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1])
                 return column_str_without_values.format(column=column_name_str)
         else:
+            if (table_name, column_name_str) in foreignkey_map:
+                return column_str_foreign_key.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1])
             return column_str_without_values.format(column=column_name_str)
 
     tables = [
