@@ -115,8 +115,11 @@ train: pull-train-image
 		--mount type=bind,source=$(BASE_DIR)/transformers_cache,target=/transformers_cache \
 		--mount type=bind,source=$(BASE_DIR)/configs,target=/app/configs \
 		--mount type=bind,source=$(BASE_DIR)/wandb,target=/app/wandb \
+		--gpus \
 		tscholak/$(TRAIN_IMAGE_NAME):$(GIT_HEAD_REF) \
-		/bin/bash -c "python seq2seq/run_seq2seq.py configs/train.json"
+		/bin/bash
+		#/bin/bash -c "python seq2seq/run_seq2seq.py configs/train.json"
+	    
 
 .PHONY: train_cosql
 train_cosql: pull-train-image
