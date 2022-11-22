@@ -44,7 +44,7 @@ def load_dataset(
 ) -> Tuple[Metric, DatasetSplits]:
     print(f'{model_args.cache_dir}')
     df = DownloadConfig()
-    df.local_files_only = True
+    df.local_files_only = False
     _spider_dataset_dict: Callable[[], DatasetDict] = lambda: datasets.load.load_dataset(
         path=data_args.dataset_paths["spider"], cache_dir=model_args.cache_dir, download_mode='reuse_dataset_if_exists', download_config=df
     )
