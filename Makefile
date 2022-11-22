@@ -1,4 +1,4 @@
-GIT_HEAD_REF := $(shell git rev-parse HEAD)
+GIT_HEAD_REF := 6a252386bed6d4233f0f13f4562d8ae8608e7445
 
 BASE_IMAGE := pytorch/pytorch:1.9.0-cuda11.1-cudnn8-devel
 
@@ -117,7 +117,8 @@ train: pull-train-image
 		--mount type=bind,source=$(BASE_DIR)/wandb,target=/app/wandb \
 		--gpus all \
 		tscholak/$(TRAIN_IMAGE_NAME):$(GIT_HEAD_REF) \
-		/bin/bash -c "python seq2seq/run_seq2seq.py configs/train.json"
+		/bin/bash
+		#/bin/bash -c "python seq2seq/run_seq2seq.py configs/train.json"
 	    
 
 .PHONY: train_cosql
