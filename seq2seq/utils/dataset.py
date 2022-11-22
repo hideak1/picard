@@ -416,16 +416,16 @@ def serialize_schema(
                 db_path=(db_path + "/" + db_id + "/" + db_id + ".sqlite"),
             )
             if matches:
-                if (table_name, column_name_str) in foreignkey_map:
-                    return column_str_foreign_key_with_values.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1], values=value_sep.join(matches))
+                # if (table_name, column_name_str) in foreignkey_map:
+                #     return column_str_foreign_key_with_values.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1], values=value_sep.join(matches))
                 return column_str_with_values.format(column=column_name_str, values=value_sep.join(matches))
             else:
-                if (table_name, column_name_str) in foreignkey_map:
-                    return column_str_foreign_key.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1])
+                # if (table_name, column_name_str) in foreignkey_map:
+                #     return column_str_foreign_key.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1])
                 return column_str_without_values.format(column=column_name_str)
         else:
-            if (table_name, column_name_str) in foreignkey_map:
-                return column_str_foreign_key.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1])
+            # if (table_name, column_name_str) in foreignkey_map:
+            #     return column_str_foreign_key.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1])
             return column_str_without_values.format(column=column_name_str)
 
     tables = [
