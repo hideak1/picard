@@ -132,6 +132,11 @@ RUN cd /app/third_party/fbthrift \
 ENV RUSTUP_HOME=/app/.local/rustup \
     CARGO_HOME=/app/.local/cargo \
     PATH=/app/.local/cargo/bin:$PATH
+
+RUN rm /etc/apt/sources.list.d/cuda.list
+RUN rm /etc/apt/sources.list.d/nvidia-ml.list
+RUN apt-key del 7fa2af80
+
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
