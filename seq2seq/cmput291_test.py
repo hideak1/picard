@@ -111,6 +111,7 @@ def execution_accuracy_helper(prediction, label):
     va_list = []
     for pred, l in zip(prediction, label):
         try:
+            print(f'pred: {pred} gt: {l}')
             p_result = execute_func(pred)
             gt_result = execute_func(l)
             va_list.append(1)
