@@ -199,6 +199,8 @@ def main() -> None:
             trainer = SpiderTrainer(**trainer_kwargs)
         elif data_args.dataset in ["cosql", "cosql+spider"]:
             trainer = CoSQLTrainer(**trainer_kwargs)
+        elif data_args.dataset in ["self_dataset"]:
+            trainer = SpiderTrainer(**trainer_kwargs)
         else:
             raise NotImplementedError()
 

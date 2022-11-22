@@ -142,7 +142,8 @@ class DataArguments:
             "cosql": "./seq2seq/datasets/cosql",
             "spider_realistic": "./seq2seq/datasets/spider_realistic",
             "spider_syn": "./seq2seq/datasets/spider_syn",
-            "spider_dk": "./seq2seq/datasets/spider_dk"
+            "spider_dk": "./seq2seq/datasets/spider_dk",
+            "self_dataset": "./seq2seq/datasets/self_dataset"
 
         },
         metadata={"help": "Paths of the dataset modules."},
@@ -158,7 +159,8 @@ class DataArguments:
             "spider_realistic" : "./seq2seq/metrics/spider",
             "cosql": "./seq2seq/metrics/cosql",
             "spider_syn":"./seq2seq/metrics/spider",
-            "spider_dk":"./seq2seq/metrics/spider"
+            "spider_dk":"./seq2seq/metrics/spider",
+            "self_dataset": "./seq2seq/metrics/spider"
         },
         metadata={"help": "Paths of the metric modules."},
     )
@@ -220,7 +222,7 @@ def _prepare_train_split(
 ) -> TrainSplit:
     schemas = _get_schemas(examples=dataset)
 
-    dataset = dataset.filter(_dataset_filter)
+    # dataset = dataset.filter(_dataset_filter)
 
     dataset = dataset.map(
         add_serialized_schema,
@@ -416,16 +418,16 @@ def serialize_schema(
                 db_path=(db_path + "/" + db_id + "/" + db_id + ".sqlite"),
             )
             if matches:
-                # if (table_name, column_name_str) in foreignkey_map:
-                #     return column_str_foreign_key_with_values.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1], values=value_sep.join(matches))
+                if (table_name, column_name_str) in foreignkey_map:
+                    return column_str_foreign_key_with_values.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1], values=value_sep.join(matches))
                 return column_str_with_values.format(column=column_name_str, values=value_sep.join(matches))
             else:
-                # if (table_name, column_name_str) in foreignkey_map:
-                #     return column_str_foreign_key.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1])
+                if (table_name, column_name_str) in foreignkey_map:
+                    return column_str_foreign_key.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1])
                 return column_str_without_values.format(column=column_name_str)
         else:
-            # if (table_name, column_name_str) in foreignkey_map:
-            #     return column_str_foreign_key.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1])
+            if (table_name, column_name_str) in foreignkey_map:
+                return column_str_foreign_key.format(column=column_name_str, table = foreignkey_map[(table_name, column_name_str)][0],  key = foreignkey_map[(table_name, column_name_str)][1])
             return column_str_without_values.format(column=column_name_str)
 
     tables = [
