@@ -87,7 +87,8 @@ class SelfDataset(datasets.GeneratorBasedBuilder):
             datasets.SplitGenerator(
                 name=datasets.Split.TRAIN,
                 gen_kwargs={
-                    "data_filepaths": [downloaded_filepath + "/self_dataset/train.json"],
+                    "data_filepaths": [
+                        os.path.join(downloaded_filepath + "/self_dataset/train.json")],
                     "db_path": downloaded_filepath + "/self_dataset/database",
                 },
             ),

@@ -160,7 +160,7 @@ class DataArguments:
             "cosql": "./seq2seq/metrics/cosql",
             "spider_syn":"./seq2seq/metrics/spider",
             "spider_dk":"./seq2seq/metrics/spider",
-            "self_dataset": "./seq2seq/metrics/spider"
+            "self_dataset": "./seq2seq/metrics/self_dataset"
         },
         metadata={"help": "Paths of the metric modules."},
     )

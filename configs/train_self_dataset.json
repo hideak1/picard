@@ -30,7 +30,7 @@
     "logging_first_step": true,
     "logging_steps": 4,
     "load_best_model_at_end": true,
-    "metric_for_best_model": "test_suite",
+    "metric_for_best_model": "exec",
     "greater_is_better": true,
     "save_total_limit": 128,
     "save_steps": 64,
