@@ -111,8 +111,8 @@ train: pull-train-image
 		-it \
 		--rm \
 		--user 13011:13011 \
-		--mount type=bind,source=$(BASE_DIR)/train,target=/train \
-		--mount type=bind,source=$(BASE_DIR)/transformers_cache,target=/transformers_cache \
+		--mount type=bind,source=$(BASE_DIR)/train,target=/app/train \
+		--mount type=bind,source=$(BASE_DIR)/transformers_cache,target=/app/transformers_cache \
 		--mount type=bind,source=$(BASE_DIR)/configs,target=/app/configs \
 		--mount type=bind,source=$(BASE_DIR)/wandb,target=/app/wandb \
 		--gpus all \
@@ -180,9 +180,9 @@ serve: pull-eval-image
 		--rm \
 		--user 13011:13011 \
 		-p 8000:8000 \
-		--mount type=bind,source=$(BASE_DIR)/train,target=/train \
-		--mount type=bind,source=$(BASE_DIR)/database,target=/database \
-		--mount type=bind,source=$(BASE_DIR)/transformers_cache,target=/transformers_cache \
+		--mount type=bind,source=$(BASE_DIR)/train,target=/app/train \
+		--mount type=bind,source=$(BASE_DIR)/database,target=/app/database \
+		--mount type=bind,source=$(BASE_DIR)/transformers_cache,target=/app/transformers_cache \
 		--mount type=bind,source=$(BASE_DIR)/configs,target=/app/configs \
 		tscholak/$(EVAL_IMAGE_NAME):$(GIT_HEAD_REF) \
 		#/bin/bash -c "python seq2seq/serve_seq2seq.py configs/serve.json"
