@@ -180,6 +180,7 @@ serve: pull-eval-image
 		--rm \
 		--user 13011:13011 \
 		-p 8000:8000 \
+		--mount type=bind,source=$(BASE_DIR)/train,target=/train \
 		--mount type=bind,source=$(BASE_DIR)/database,target=/database \
 		--mount type=bind,source=$(BASE_DIR)/transformers_cache,target=/transformers_cache \
 		--mount type=bind,source=$(BASE_DIR)/configs,target=/app/configs \
