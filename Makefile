@@ -109,6 +109,7 @@ train: pull-train-image
 	mkdir -p -m 777 wandb
 	docker run \
 		-it \
+		--privileged \
 		--rm \
 		--user 13011:13011 \
 		--mount type=bind,source=$(BASE_DIR)/train,target=/app/train \
